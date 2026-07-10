@@ -1,0 +1,43 @@
+{
+  "name": "aim-instagram-suite",
+  "version": "3.1.0",
+  "description": "Codex plugin for AIM Instagram Suite content-team orchestration and per-slide carousel image generation.",
+  "author": {
+    "name": "AIM Instagram Suite",
+    "email": "support@example.com",
+    "url": "https://github.com/fsbtactic-code/aim-instagram-suite"
+  },
+  "homepage": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
+  "repository": "https://github.com/fsbtactic-code/aim-instagram-suite",
+  "license": "MIT",
+  "keywords": [
+    "instagram",
+    "carousel",
+    "content",
+    "mcp",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AIM Instagram Suite",
+    "shortDescription": "Create Instagram content teams and per-slide carousel image prompts.",
+    "longDescription": "AIM Instagram Suite adds MCP-powered content strategy and carousel creation workflows to Codex. It includes a content-team skill for strategy, hooks, scripts and visual direction, plus a carousel image-agent skill that generates every slide as a separate image prompt without collages.",
+    "developerName": "AIM Instagram Suite",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "MCP"
+    ],
+    "websiteURL": "https://github.com/fsbtactic-code/aim-instagram-suite",
+    "privacyPolicyURL": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
+    "termsOfServiceURL": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
+    "defaultPrompt": [
+      "Create an Instagram carousel from this brief.",
+      "Build a content plan with AIM Content Team.",
+      "Generate each carousel slide as a separate image."
+    ],
+    "brandColor": "#A855F7"
+  }
+}
