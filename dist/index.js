@@ -107,6 +107,7 @@ const localizeCarousel_js_1 = require("./tools/localizeCarousel.js");
 const viralStructures_js_1 = require("./core/viralStructures.js");
 const designSystem_js_1 = require("./core/designSystem.js");
 const createStyle_js_1 = require("./tools/createStyle.js");
+const contentTeam_js_1 = require("./tools/contentTeam.js");
 // ============================================================
 // Схемы входных параметров — Video Tools
 // ============================================================
@@ -212,6 +213,7 @@ const CreateStyleSchema = zod_1.z.object({
     styleName: zod_1.z.string().optional().describe('Название стиля'),
     saveToPath: zod_1.z.string().optional().describe('Путь для сохранения JSON стиля'),
 });
+const ContentTeamInputSchema = contentTeam_js_1.ContentTeamSchema;
 const ViralStructureSchema = zod_1.z.object({
     structureId: zod_1.z.enum([
         'open-loop', 'listicle', 'before-after', 'myth-busting', 'step-by-step',
@@ -223,6 +225,27 @@ const ViralStructureSchema = zod_1.z.object({
 // Определения инструментов (MCP Tools)
 // ============================================================
 const TOOLS = [
+    {
+        name: 'aim_content_team',
+        description: `🧠 Команда контент-агентов Сергея для роста Instagram и VK.
+Создаёт систему промптов и быстрых кнопок для постов, каруселей, Reels и VK-адаптаций.
+Внутри: Хранитель вайба Сергея, Архитектор виральности, Анти-AI редактор, Скептик из ленты, VK-редактор алгоритмов, Продюсер роста подписчиков.
+
+Быстрые команды: /content, /reels, /carousel, /post, /vk, /audit, /hooks.
+Пример: "контент: тема — почему посты Сергея падают в охватах"`,
+        inputSchema: {
+            type: 'object',
+            properties: {
+                mode: { type: 'string', enum: ['setup', 'post', 'carousel', 'reels', 'vk', 'audit', 'content'], description: 'setup=команда и кнопки; content=полный цикл' },
+                topic: { type: 'string', description: 'Тема, идея или исходный тезис' },
+                sergeyContext: { type: 'string', description: 'Вайб Сергея, ЦА, миссия, запреты, словарь' },
+                platform: { type: 'string', enum: ['instagram', 'vk', 'both'], description: 'Платформа' },
+                goal: { type: 'string', enum: ['subscribers', 'reach', 'saves', 'shares', 'trust', 'sales'], description: 'Главная цель' },
+                format: { type: 'string', enum: ['post', 'carousel', 'reels', 'vk_post', 'all'], description: 'Формат выдачи' },
+            },
+            required: [],
+        },
+    },
     // ── 🎨 STYLE CREATOR ──────────────────────────────────────────────────────
     {
         name: 'aim_create_style',
@@ -539,6 +562,11 @@ server.setRequestHandler(types_js_1.CallToolRequestSchema, async (request) => {
     try {
         let result;
         switch (name) {
+            case 'aim_content_team': {
+                const parsed = ContentTeamInputSchema.parse(args ?? {});
+                result = (0, contentTeam_js_1.contentTeam)(parsed);
+                break;
+            }
             // ── Video Tools ──────────────────────────────────────────────────────
             case 'aim_evaluate_video': {
                 const parsed = EvaluateVideoSchema.parse(args);
@@ -730,6 +758,7 @@ async function main() {
     const transport = new stdio_js_1.StdioServerTransport();
     await server.connect(transport);
     console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
+    console.error('[AIM] 🧠 Content:   aim_content_team');
     console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
     console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style');
     console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
