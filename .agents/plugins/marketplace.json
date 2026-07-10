@@ -8,6 +8,7 @@
       "name": "aim-instagram-suite",
       "source": {
         "source": "local",
+        "path": "./"
         "path": "."
       },
       "policy": {

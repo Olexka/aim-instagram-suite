@@ -4,6 +4,19 @@
  */
 import { z } from 'zod';
 export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
+    slides: z.ZodArray<z.ZodObject<{
+        slideNumber: z.ZodNumber;
+        text: z.ZodString;
+        visual: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        slideNumber: number;
+        visual: string;
+        text: string;
+    }, {
+        slideNumber: number;
+        visual: string;
+        text: string;
+    }>, "many">;
     material: z.ZodString;
     slideCount: z.ZodDefault<z.ZodNumber>;
     format: z.ZodDefault<z.ZodEnum<["square", "portrait"]>>;
@@ -13,6 +26,12 @@ export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
     includeTextOnImage: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     language: "ru" | "en";
+    format: "square" | "portrait";
+    slides: {
+        slideNumber: number;
+        visual: string;
+        text: string;
+    }[];
     slideCount: number;
     format: "square" | "portrait";
     material: string;
@@ -20,6 +39,12 @@ export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
     includeTextOnImage: boolean;
     style?: string | undefined;
 }, {
+    slides: {
+        slideNumber: number;
+        visual: string;
+        text: string;
+    }[];
+    language?: "ru" | "en" | undefined;
     material: string;
     language?: "ru" | "en" | undefined;
     slideCount?: number | undefined;

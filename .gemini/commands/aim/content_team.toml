@@ -1,3 +1,29 @@
+description = "👥 Контент-команда AIM: стратегия, хуки, структура, CTA и визуал"
+
+prompt = """
+Используй инструмент aim_content_team, чтобы превратить тему и контекст бренда Сергея в готовую структуру контента.
+
+Входные данные: {{args}}
+
+Параметры реальной схемы:
+- mode — carousel, reels, post, stories, content_plan (обычно carousel)
+- topic — тема или исходный материал
+- sergeyContext — контекст бренда Сергея
+- platform — instagram, telegram, both
+- goal — shares, saves, sales, subscribers, reach, trust
+- format — carousel, reels, post, stories, content_plan
+
+Пример аргументов:
+{
+  "mode": "carousel",
+  "topic": "тема или исходный материал",
+  "sergeyContext": "контекст бренда Сергея",
+  "platform": "both",
+  "goal": "shares",
+  "format": "carousel"
+}
+
+Не используй brief, audience, toneOfVoice, language и недопустимую цель engagement.
 description = "👥 Контент-команда AIM: стратегия, хуки, сценарий, CTA и визуал"
 
 prompt = """

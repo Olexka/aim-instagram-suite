@@ -2,6 +2,28 @@
 /**
  * AIM Instagram Suite — Tool: aim_content_team
  * Оркестрирует команду контент-специалистов для подготовки Reels/каруселей/постов.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ContentTeamInputSchema = void 0;
+exports.contentTeam = contentTeam;
+const zod_1 = require("zod");
+exports.ContentTeamInputSchema = zod_1.z.object({
+    mode: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel')
+        .describe('Режим работы контент-команды'),
+    topic: zod_1.z.string().min(3).describe('Тема или исходный материал'),
+    sergeyContext: zod_1.z.string().optional().default('').describe('Контекст бренда Сергея'),
+    platform: zod_1.z.enum(['instagram', 'telegram', 'both']).default('both').describe('Платформа публикации'),
+    goal: zod_1.z.enum(['shares', 'saves', 'sales', 'subscribers', 'reach', 'trust']).default('shares')
+        .describe('Цель контента'),
+    format: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel')
+        .describe('Формат результата'),
+});
+const deliverablesByFormat = {
+    carousel: ['strategy', 'hooks', 'carousel_structure', 'exact_slide_text', 'caption', 'cta', 'visual_direction'],
+    reels: ['strategy', 'hooks', 'script', 'caption', 'cta', 'visual_direction'],
+    post: ['strategy', 'hooks', 'caption', 'cta', 'visual_direction'],
+    stories: ['strategy', 'story_sequence', 'cta', 'visual_direction'],
+    content_plan: ['strategy', 'content_pillars', 'hooks', 'publishing_plan', 'cta'],
  * AIM Content Team — Tool: aim_content_team
  * Multi-agent prompt pack for Sergey's Instagram/VK content production.
  */
@@ -49,6 +71,29 @@ const roleDescriptions = [
     },
     {
         role: 'Conversion Editor',
+        responsibility: 'Усиливает CTA, сохранения, репосты, комментарии, доверие и коммерческую ясность.',
+    },
+];
+function contentTeam(input) {
+    const deliverables = deliverablesByFormat[input.format];
+    const result = {
+        tool: 'aim_content_team',
+        purpose: 'Команда AI-специалистов для упаковки темы в готовую стратегию, структуру публикации и точные формулировки.',
+        settings: {
+            mode: input.mode,
+            topic: input.topic,
+            sergeyContext: input.sergeyContext,
+            platform: input.platform,
+            goal: input.goal,
+            format: input.format,
+            deliverables,
+        },
+        team: roleDescriptions,
+        teamSystemPrompt: `Ты — AIM Content Team для бренда Сергея: стратег, автор хуков, сценарист, визуальный директор и редактор конверсии. Работай как редакционная команда: найди сильный угол подачи по теме, учти контекст бренда Сергея, платформу ${input.platform}, цель ${input.goal} и формат ${input.format}. Не давай общие советы — выдавай готовые формулировки, которые можно сразу использовать.`,
+        workflow: [
+            '1. Strategist: сформулируй главный инсайт аудитории и контент-угол.',
+            '2. Hook Writer: предложи 5 вариантов хука/обложки с разными психологическими триггерами.',
+            '3. Scriptwriter: собери структуру под выбранный формат и точный текст.',
         responsibility: 'Усиливает CTA, сохранения, комментарии, доверие и коммерческую ясность.',
     },
 ];
@@ -78,6 +123,12 @@ function contentTeam(input) {
         ],
         outputContract: {
             requestedDeliverables: deliverables,
+            requiredFormat: 'Верни структурированный JSON с ключами strategy, hooks, carousel_structure/script/story_sequence/content_plan, exact_text, caption, cta, visual_direction — по смыслу выбранного format.',
+        },
+        executionPrompt: `ТЕМА / МАТЕРИАЛ:\n${input.topic}\n\nКонтекст бренда Сергея: ${input.sergeyContext || 'не указан'}\nПлатформа: ${input.platform}\nЦель: ${input.goal}\nMode: ${input.mode}\nFormat: ${input.format}\nDeliverables: ${deliverables.join(', ')}`,
+        nextStep: input.format === 'carousel'
+            ? 'После структуры можно вызвать aim_create_carousel_image_agent, передав slides: [{ slideNumber, text, visual }] для генерации отдельных промптов-картинок по каждому слайду.'
+            : 'Используй результат как готовый бриф для продакшена или передай в профильный AIM-инструмент.',
             requiredFormat: 'Верни структурированный JSON с ключами strategy, hooks, script/carousel_structure, caption, cta, visual_direction — только те ключи, которые запрошены в deliverables.',
         },
         executionPrompt: `БРИФ:\n${input.brief}\n\nФормат: ${input.format}\nЦель: ${input.goal}\nАудитория: ${input.audience ?? 'определи из брифа'}\nТон: ${input.toneOfVoice}\nDeliverables: ${deliverables.join(', ')}`,
