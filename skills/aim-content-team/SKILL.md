@@ -1,55 +1,32 @@
 ---
 name: aim-content-team
-description: Use AIM Content Team to turn Sergey brand context and a topic into carousel strategy, hooks, exact slide text, CTAs, and visual direction through the local AIM MCP server.
-description: Use AIM Content Team to turn a brief into content strategy, hooks, scripts, carousel structures, captions, CTAs, and visual direction through the local AIM MCP server.
+description: Turn a topic and Sergey brand context into AIM content strategy, hooks, carousel structure, exact slide text, CTA, and visual direction.
 ---
 
 # AIM Content Team
 
-Use this skill when the user asks for content strategy, hooks, carousel structure, captions, CTA ideas, or a content plan for Sergey/AIM content.
+Use this skill when the user wants AIM to prepare content strategy or carousel planning for Sergey/AIM content.
 
-## Workflow
+## Real MCP schema
 
-1. Collect or infer the required inputs:
-   - `topic`: тема или исходный материал;
-   - `sergeyContext`: контекст бренда Сергея;
-   - `platform`: `instagram`, `telegram`, or `both`;
-   - `goal`: `shares`, `saves`, `sales`, `subscribers`, `reach`, or `trust`;
-   - `mode` and `format`: usually `carousel` for carousel work.
-2. Call the MCP tool `aim_content_team` with exactly the real schema fields.
-3. Use the returned team output as the source of truth:
-   - strategy from Strategist;
-   - hooks from Hook Writer;
-   - carousel structure and exact text from Scriptwriter;
-   - visual direction from Visual Director;
-   - CTA/save/share/comment mechanics from Conversion Editor.
-4. If the user wants images, convert the carousel result into `slides: [{ slideNumber, text, visual }]` and continue with the `aim-carousel-image-agent` skill.
+Use only these parameters:
 
-## MCP Tool
+- `mode`
+- `topic`
+- `sergeyContext`
+- `platform`
+- `goal`
+- `format`
 
-Call `aim_content_team` with this shape:
-Use this skill when the user asks for content strategy, hooks, Reels scripts, carousel structure, captions, CTA ideas, or a content plan for Instagram/social content.
+Allowed `platform` values:
 
-## Workflow
+- `instagram`
+- `vk`
+- `both`
 
-1. Collect or infer the required brief:
-   - topic, product, offer, or source material;
-   - target audience;
-   - desired format: `carousel`, `reels`, `post`, `stories`, or `content_plan`;
-   - goal: `reach`, `engagement`, `sales`, `subscribers`, or `trust`;
-   - tone of voice and language.
-2. Call the MCP tool `aim_content_team` with the brief and any known parameters.
-3. Use the returned team output as the source of truth:
-   - strategy from Strategist;
-   - hooks from Hook Writer;
-   - script or carousel structure from Scriptwriter;
-   - visual direction from Visual Director;
-   - CTA/save/share/comment mechanics from Conversion Editor.
-4. If the result is for a carousel and the user wants images, continue with the `aim-carousel-image-agent` skill.
+Use no extra arguments beyond the six fields listed above.
 
-## MCP Tool
-
-Call:
+## Required call
 
 ```json
 {
@@ -65,27 +42,11 @@ Call:
 }
 ```
 
-## Important constraints
+## Workflow
 
-- Do not use `brief`, `audience`, `toneOfVoice`, or `language`.
-- Do not use unsupported goals such as `engagement`.
-- Return ready-to-use copy, not generic advice.
-- Keep hooks specific and scroll-stopping.
-- Keep CTA aligned with the selected goal.
-- For carousel outputs, make the slide structure concrete enough to pass directly into `aim_create_carousel_image_agent` as `slides`.
-    "brief": "User brief or source material",
-    "format": "carousel",
-    "goal": "engagement",
-    "audience": "optional audience",
-    "toneOfVoice": "educational",
-    "language": "ru"
-  }
-}
-```
-
-## Output guidance
-
-- Return ready-to-use copy, not generic advice.
-- Keep hooks specific and scroll-stopping.
-- Keep CTA aligned with the selected goal.
-- For carousel outputs, make the slide structure concrete enough to pass directly into `aim_create_carousel_image_agent`.
+1. Collect or infer `topic` and `sergeyContext`.
+2. Choose `platform` from `instagram`, `vk`, or `both`.
+3. Choose a valid `goal`, preferably `shares` for viral carousel work.
+4. Call `aim_content_team` with the exact schema above.
+5. Use the result as the approved source for structure, hooks, exact slide text, CTA, and visual direction.
+6. If images are needed, convert the carousel into `slides: [{ slideNumber, text, visual }]` and then use `aim_create_carousel_image_agent`.

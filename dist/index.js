@@ -218,7 +218,7 @@ const ContentTeamInputSchema = zod_1.z.object({
     mode: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Режим работы контент-команды'),
     topic: zod_1.z.string().min(3).describe('Тема или исходный материал'),
     sergeyContext: zod_1.z.string().optional().default('').describe('Контекст бренда Сергея'),
-    platform: zod_1.z.enum(['instagram', 'telegram', 'both']).default('both').describe('Платформа публикации'),
+    platform: zod_1.z.enum(['instagram', 'vk', 'both']).default('both').describe('Платформа публикации'),
     goal: zod_1.z.enum(['shares', 'saves', 'sales', 'subscribers', 'reach', 'trust']).default('shares').describe('Цель контента'),
     format: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Формат результата'),
 });
@@ -229,22 +229,9 @@ const CreateCarouselImageAgentSchema = zod_1.z.object({
         visual: zod_1.z.string().describe('Описание изображения для текущего слайда'),
     })).min(1).max(20).describe('Массив слайдов: slideNumber, text, visual'),
     format: zod_1.z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
-    style: zod_1.z.string().optional().describe('Единый визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
-    brief: zod_1.z.string().min(10).describe('Бриф: тема, продукт, аудитория, оффер или исходный материал'),
-    format: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Формат результата'),
-    goal: zod_1.z.enum(['reach', 'engagement', 'sales', 'subscribers', 'trust']).default('engagement').describe('Цель контента'),
-    audience: zod_1.z.string().optional().describe('Целевая аудитория'),
-    toneOfVoice: zod_1.z.enum(['educational', 'motivational', 'professional', 'casual', 'provocative']).default('educational').describe('Тон коммуникации'),
-    language: zod_1.z.enum(['ru', 'en']).default('ru').describe('Язык результата'),
-    deliverables: zod_1.z.array(zod_1.z.enum(['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'])).optional().describe('Какие блоки подготовить'),
-});
-const CreateCarouselImageAgentSchema = zod_1.z.object({
-    material: zod_1.z.string().min(10).describe('Исходный материал: текст, тезисы, сценарий, ссылка-описание или бриф'),
-    slideCount: zod_1.z.number().min(1).max(20).default(7).describe('Количество отдельных слайдов/изображений'),
-    format: zod_1.z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
-    style: zod_1.z.string().optional().describe('Визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
+    style: zod_1.z.string().optional().describe('Единый визуальный стиль'),
     language: zod_1.z.enum(['ru', 'en']).default('ru').describe('Язык текста на слайдах'),
-    outputNaming: zod_1.z.string().default('slide_{NN}.png').describe('Шаблон имён файлов, например slide_{NN}.png'),
+    outputNaming: zod_1.z.string().default('slide_{NN}.png').describe('Шаблон имён файлов'),
     includeTextOnImage: zod_1.z.boolean().default(true).describe('Добавлять ли текст прямо на изображение'),
 });
 const ViralStructureSchema = zod_1.z.object({
@@ -261,38 +248,25 @@ const TOOLS = [
     {
         name: 'aim_content_team',
         description: `👥 Контент-команда внутри AIM: стратег + автор хуков + сценарист + визуальный директор + редактор конверсии.
-Превращает бриф в готовые deliverables для Reels, карусели, поста, Stories или контент-плана.
-Используй для упаковки сырой идеи в стратегию, хуки, структуру, caption, CTA и визуальное направление.`,
+Превращает тему и контекст бренда Сергея в стратегию, хуки, структуру, CTA и визуальное направление.
+Используй для упаковки идеи под Instagram/VK в готовый контент-план или карусель.`,
         inputSchema: {
             type: 'object',
             properties: {
                 mode: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Режим работы контент-команды' },
                 topic: { type: 'string', description: 'Тема или исходный материал' },
                 sergeyContext: { type: 'string', description: 'Контекст бренда Сергея' },
-                platform: { type: 'string', enum: ['instagram', 'telegram', 'both'], description: 'Платформа публикации' },
+                platform: { type: 'string', enum: ['instagram', 'vk', 'both'], description: 'Платформа публикации' },
                 goal: { type: 'string', enum: ['shares', 'saves', 'sales', 'subscribers', 'reach', 'trust'], description: 'Цель контента' },
                 format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
             },
             required: ['topic'],
-                brief: { type: 'string', description: 'Бриф: тема, продукт, аудитория, оффер или исходный материал' },
-                format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
-                goal: { type: 'string', enum: ['reach', 'engagement', 'sales', 'subscribers', 'trust'], description: 'Цель контента' },
-                audience: { type: 'string', description: 'Целевая аудитория' },
-                toneOfVoice: { type: 'string', enum: ['educational', 'motivational', 'professional', 'casual', 'provocative'], description: 'Тон коммуникации' },
-                language: { type: 'string', enum: ['ru', 'en'], description: 'Язык результата' },
-                deliverables: {
-                    type: 'array',
-                    items: { type: 'string', enum: ['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'] },
-                    description: 'Какие блоки подготовить',
-                },
-            },
-            required: ['brief'],
         },
     },
     {
         name: 'aim_create_carousel_image_agent',
         description: `🖼️ Агент для GPT-like генерации каруселей отдельными картинками.
-Превращает предоставленный материал в системный промпт и набор per-slide промптов.
+Превращает массив slides в набор per-slide промптов.
 Главное правило: один слайд = один отдельный запрос = один PNG, без коллажей и объединения всех слайдов в одну картинку.
 Используй, когда нужен визуал как у генераторов картинок, но каждый слайд должен быть отдельным файлом.`,
         inputSchema: {
@@ -313,16 +287,11 @@ const TOOLS = [
                 },
                 format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
                 style: { type: 'string', description: 'Единый визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
-                material: { type: 'string', description: 'Исходный материал: текст, тезисы, сценарий или бриф' },
-                slideCount: { type: 'number', description: 'Количество отдельных слайдов/изображений (1-20)' },
-                format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
-                style: { type: 'string', description: 'Визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
                 language: { type: 'string', enum: ['ru', 'en'], description: 'Язык текста на слайдах' },
                 outputNaming: { type: 'string', description: 'Шаблон имён файлов, например slide_{NN}.png' },
                 includeTextOnImage: { type: 'boolean', description: 'Добавлять ли текст прямо на изображение' },
             },
             required: ['slides'],
-            required: ['material'],
         },
     },
     // ── 🎨 STYLE CREATOR ──────────────────────────────────────────────────────

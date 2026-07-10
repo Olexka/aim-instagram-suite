@@ -1,6 +1,6 @@
 /**
  * AIM Instagram Suite — Tool: aim_create_carousel_image_agent
- * Создаёт промпт-агента для генерации Instagram-каруселей как отдельных изображений.
+ * Создаёт промпты для генерации Instagram-карусели отдельными изображениями.
  */
 import { z } from 'zod';
 export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
@@ -17,8 +17,6 @@ export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
         visual: string;
         text: string;
     }>, "many">;
-    material: z.ZodString;
-    slideCount: z.ZodDefault<z.ZodNumber>;
     format: z.ZodDefault<z.ZodEnum<["square", "portrait"]>>;
     style: z.ZodOptional<z.ZodString>;
     language: z.ZodDefault<z.ZodEnum<["ru", "en"]>>;
@@ -32,9 +30,6 @@ export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
         visual: string;
         text: string;
     }[];
-    slideCount: number;
-    format: "square" | "portrait";
-    material: string;
     outputNaming: string;
     includeTextOnImage: boolean;
     style?: string | undefined;
@@ -45,9 +40,6 @@ export declare const CreateCarouselImageAgentSchema: z.ZodObject<{
         text: string;
     }[];
     language?: "ru" | "en" | undefined;
-    material: string;
-    language?: "ru" | "en" | undefined;
-    slideCount?: number | undefined;
     format?: "square" | "portrait" | undefined;
     style?: string | undefined;
     outputNaming?: string | undefined;
