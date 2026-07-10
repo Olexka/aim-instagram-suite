@@ -23,6 +23,7 @@ All skill files are already included in this repository — just copy them to th
 | `aim-render-carousel` | `aim_render_premium_carousel` | 🎨 STEP 2: Render carousel to PNG files |
 | `aim-brand-colors` | `aim_auto_brand_colors` | 🎨 Set brand colors with WCAG AA check |
 | `aim-create-style` | `aim_create_style` | 🎨 Interactive style creator wizard |
+| `aim-carousel-image-agent` | `aim_create_carousel_image_agent` | 🖼️ Generate per-slide image prompts without collage |
 
 ---
 

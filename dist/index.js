@@ -1,7 +1,7 @@
 "use strict";
 /**
  * AIM Instagram Suite — MCP Server Entry Point v1.3.0
- * 14 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
+ * 15 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * Транспорт: stdio (совместим с `claude mcp add`)
  */
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -107,6 +107,7 @@ const localizeCarousel_js_1 = require("./tools/localizeCarousel.js");
 const viralStructures_js_1 = require("./core/viralStructures.js");
 const designSystem_js_1 = require("./core/designSystem.js");
 const createStyle_js_1 = require("./tools/createStyle.js");
+const createCarouselImageAgent_js_1 = require("./tools/createCarouselImageAgent.js");
 // ============================================================
 // Схемы входных параметров — Video Tools
 // ============================================================
@@ -212,6 +213,15 @@ const CreateStyleSchema = zod_1.z.object({
     styleName: zod_1.z.string().optional().describe('Название стиля'),
     saveToPath: zod_1.z.string().optional().describe('Путь для сохранения JSON стиля'),
 });
+const CreateCarouselImageAgentSchema = zod_1.z.object({
+    material: zod_1.z.string().min(10).describe('Исходный материал: текст, тезисы, сценарий, ссылка-описание или бриф'),
+    slideCount: zod_1.z.number().min(1).max(20).default(7).describe('Количество отдельных слайдов/изображений'),
+    format: zod_1.z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
+    style: zod_1.z.string().optional().describe('Визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
+    language: zod_1.z.enum(['ru', 'en']).default('ru').describe('Язык текста на слайдах'),
+    outputNaming: zod_1.z.string().default('slide_{NN}.png').describe('Шаблон имён файлов, например slide_{NN}.png'),
+    includeTextOnImage: zod_1.z.boolean().default(true).describe('Добавлять ли текст прямо на изображение'),
+});
 const ViralStructureSchema = zod_1.z.object({
     structureId: zod_1.z.enum([
         'open-loop', 'listicle', 'before-after', 'myth-busting', 'step-by-step',
@@ -223,6 +233,26 @@ const ViralStructureSchema = zod_1.z.object({
 // Определения инструментов (MCP Tools)
 // ============================================================
 const TOOLS = [
+    {
+        name: 'aim_create_carousel_image_agent',
+        description: `🖼️ Агент для GPT-like генерации каруселей отдельными картинками.
+Превращает предоставленный материал в системный промпт и набор per-slide промптов.
+Главное правило: один слайд = один отдельный запрос = один PNG, без коллажей и объединения всех слайдов в одну картинку.
+Используй, когда нужен визуал как у генераторов картинок, но каждый слайд должен быть отдельным файлом.`,
+        inputSchema: {
+            type: 'object',
+            properties: {
+                material: { type: 'string', description: 'Исходный материал: текст, тезисы, сценарий или бриф' },
+                slideCount: { type: 'number', description: 'Количество отдельных слайдов/изображений (1-20)' },
+                format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
+                style: { type: 'string', description: 'Визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
+                language: { type: 'string', enum: ['ru', 'en'], description: 'Язык текста на слайдах' },
+                outputNaming: { type: 'string', description: 'Шаблон имён файлов, например slide_{NN}.png' },
+                includeTextOnImage: { type: 'boolean', description: 'Добавлять ли текст прямо на изображение' },
+            },
+            required: ['material'],
+        },
+    },
     // ── 🎨 STYLE CREATOR ──────────────────────────────────────────────────────
     {
         name: 'aim_create_style',
@@ -539,6 +569,11 @@ server.setRequestHandler(types_js_1.CallToolRequestSchema, async (request) => {
     try {
         let result;
         switch (name) {
+            case 'aim_create_carousel_image_agent': {
+                const parsed = CreateCarouselImageAgentSchema.parse(args);
+                result = (0, createCarouselImageAgent_js_1.createCarouselImageAgent)(parsed);
+                break;
+            }
             // ── Video Tools ──────────────────────────────────────────────────────
             case 'aim_evaluate_video': {
                 const parsed = EvaluateVideoSchema.parse(args);
@@ -731,7 +766,7 @@ async function main() {
     await server.connect(transport);
     console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
     console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
-    console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style');
+    console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_create_carousel_image_agent');
     console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
 }
 main().catch((err) => {
