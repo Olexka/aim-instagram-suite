@@ -8,6 +8,11 @@
   },
   "homepage": "https://github.com/Olexka/aim-instagram-suite#readme",
   "repository": "https://github.com/Olexka/aim-instagram-suite",
+    "email": "support@example.com",
+    "url": "https://github.com/fsbtactic-code/aim-instagram-suite"
+  },
+  "homepage": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
+  "repository": "https://github.com/fsbtactic-code/aim-instagram-suite",
   "license": "MIT",
   "keywords": [
     "instagram",
@@ -32,6 +37,9 @@
     "websiteURL": "https://github.com/Olexka/aim-instagram-suite",
     "privacyPolicyURL": "https://github.com/Olexka/aim-instagram-suite#readme",
     "termsOfServiceURL": "https://github.com/Olexka/aim-instagram-suite#readme",
+    "websiteURL": "https://github.com/fsbtactic-code/aim-instagram-suite",
+    "privacyPolicyURL": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
+    "termsOfServiceURL": "https://github.com/fsbtactic-code/aim-instagram-suite#readme",
     "defaultPrompt": [
       "Create an Instagram carousel from this brief.",
       "Build a content plan with AIM Content Team.",

@@ -230,6 +230,19 @@ const CreateCarouselImageAgentSchema = zod_1.z.object({
     })).min(1).max(20).describe('Массив слайдов: slideNumber, text, visual'),
     format: zod_1.z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
     style: zod_1.z.string().optional().describe('Единый визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
+    brief: zod_1.z.string().min(10).describe('Бриф: тема, продукт, аудитория, оффер или исходный материал'),
+    format: zod_1.z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Формат результата'),
+    goal: zod_1.z.enum(['reach', 'engagement', 'sales', 'subscribers', 'trust']).default('engagement').describe('Цель контента'),
+    audience: zod_1.z.string().optional().describe('Целевая аудитория'),
+    toneOfVoice: zod_1.z.enum(['educational', 'motivational', 'professional', 'casual', 'provocative']).default('educational').describe('Тон коммуникации'),
+    language: zod_1.z.enum(['ru', 'en']).default('ru').describe('Язык результата'),
+    deliverables: zod_1.z.array(zod_1.z.enum(['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'])).optional().describe('Какие блоки подготовить'),
+});
+const CreateCarouselImageAgentSchema = zod_1.z.object({
+    material: zod_1.z.string().min(10).describe('Исходный материал: текст, тезисы, сценарий, ссылка-описание или бриф'),
+    slideCount: zod_1.z.number().min(1).max(20).default(7).describe('Количество отдельных слайдов/изображений'),
+    format: zod_1.z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
+    style: zod_1.z.string().optional().describe('Визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
     language: zod_1.z.enum(['ru', 'en']).default('ru').describe('Язык текста на слайдах'),
     outputNaming: zod_1.z.string().default('slide_{NN}.png').describe('Шаблон имён файлов, например slide_{NN}.png'),
     includeTextOnImage: zod_1.z.boolean().default(true).describe('Добавлять ли текст прямо на изображение'),
@@ -261,6 +274,19 @@ const TOOLS = [
                 format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
             },
             required: ['topic'],
+                brief: { type: 'string', description: 'Бриф: тема, продукт, аудитория, оффер или исходный материал' },
+                format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
+                goal: { type: 'string', enum: ['reach', 'engagement', 'sales', 'subscribers', 'trust'], description: 'Цель контента' },
+                audience: { type: 'string', description: 'Целевая аудитория' },
+                toneOfVoice: { type: 'string', enum: ['educational', 'motivational', 'professional', 'casual', 'provocative'], description: 'Тон коммуникации' },
+                language: { type: 'string', enum: ['ru', 'en'], description: 'Язык результата' },
+                deliverables: {
+                    type: 'array',
+                    items: { type: 'string', enum: ['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'] },
+                    description: 'Какие блоки подготовить',
+                },
+            },
+            required: ['brief'],
         },
     },
     {
@@ -287,11 +313,16 @@ const TOOLS = [
                 },
                 format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
                 style: { type: 'string', description: 'Единый визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
+                material: { type: 'string', description: 'Исходный материал: текст, тезисы, сценарий или бриф' },
+                slideCount: { type: 'number', description: 'Количество отдельных слайдов/изображений (1-20)' },
+                format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
+                style: { type: 'string', description: 'Визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
                 language: { type: 'string', enum: ['ru', 'en'], description: 'Язык текста на слайдах' },
                 outputNaming: { type: 'string', description: 'Шаблон имён файлов, например slide_{NN}.png' },
                 includeTextOnImage: { type: 'boolean', description: 'Добавлять ли текст прямо на изображение' },
             },
             required: ['slides'],
+            required: ['material'],
         },
     },
     // ── 🎨 STYLE CREATOR ──────────────────────────────────────────────────────
@@ -811,6 +842,7 @@ async function main() {
     const transport = new stdio_js_1.StdioServerTransport();
     await server.connect(transport);
     console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
+    console.error('[AIM] 🧠 Content:   aim_content_team');
     console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
     console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_content_team · aim_create_carousel_image_agent');
     console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
