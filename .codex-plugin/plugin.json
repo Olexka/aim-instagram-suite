@@ -1,7 +1,7 @@
 {
   "name": "aim-instagram-suite",
-  "version": "3.1.0",
-  "description": "Codex plugin for AIM Instagram Suite content strategy and per-slide carousel image prompts.",
+  "version": "3.2.0",
+  "description": "Codex plugin for AIM content, carousels, and short AI video creation from text or photos.",
   "author": {
     "name": "AIM Instagram Suite",
     "url": "https://github.com/Olexka/aim-instagram-suite"
@@ -14,14 +14,17 @@
     "carousel",
     "content",
     "mcp",
-    "codex"
+    "codex",
+    "video",
+    "image-to-video",
+    "reels"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "AIM Instagram Suite",
-    "shortDescription": "Create AIM content strategy and per-slide carousel image prompts.",
-    "longDescription": "AIM Instagram Suite adds MCP-powered content strategy and disciplined carousel image workflows to Codex. It includes content-team planning and per-slide prompts so each carousel slide can be generated separately without collages.",
+    "shortDescription": "Create AIM content, carousels, and short videos.",
+    "longDescription": "AIM Instagram Suite adds MCP-powered content strategy, disciplined carousel image workflows, and short video generation from a description or reference photo.",
     "developerName": "AIM Instagram Suite",
     "category": "Productivity",
     "capabilities": [
@@ -35,7 +38,8 @@
     "defaultPrompt": [
       "Create an Instagram carousel from this topic.",
       "Build a content plan with AIM Content Team.",
-      "Generate each carousel slide as a separate prompt."
+      "Generate each carousel slide as a separate prompt.",
+      "Turn my description or photo into a short vertical video."
     ],
     "brandColor": "#A855F7"
   }
