@@ -1,6 +1,6 @@
 /**
  * AIM Instagram Suite — MCP Server Entry Point v1.3.0
- * 14 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
+ * 16 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * Транспорт: stdio (совместим с `claude mcp add`)
  */
 
@@ -112,6 +112,8 @@ import { localizeCarousel } from './tools/localizeCarousel.js';
 import { listViralStructures, getViralStructure, structureToSlides } from './core/viralStructures.js';
 import { listAvailableFonts } from './core/designSystem.js';
 import { createStyle } from './tools/createStyle.js';
+import { createCarouselImageAgent } from './tools/createCarouselImageAgent.js';
+import { contentTeam } from './tools/contentTeam.js';
 
 // ============================================================
 // Схемы входных параметров — Video Tools
@@ -234,6 +236,30 @@ const CreateStyleSchema = z.object({
   saveToPath: z.string().optional().describe('Путь для сохранения JSON стиля'),
 });
 
+
+
+const ContentTeamInputSchema = z.object({
+  mode: z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Режим работы контент-команды'),
+  topic: z.string().min(3).describe('Тема или исходный материал'),
+  sergeyContext: z.string().optional().default('').describe('Контекст бренда Сергея'),
+  platform: z.enum(['instagram', 'telegram', 'both']).default('both').describe('Платформа публикации'),
+  goal: z.enum(['shares', 'saves', 'sales', 'subscribers', 'reach', 'trust']).default('shares').describe('Цель контента'),
+  format: z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Формат результата'),
+});
+
+const CreateCarouselImageAgentSchema = z.object({
+  slides: z.array(z.object({
+    slideNumber: z.number().int().min(1).describe('Номер слайда'),
+    text: z.string().describe('Точный текст текущего слайда'),
+    visual: z.string().describe('Описание изображения для текущего слайда'),
+  })).min(1).max(20).describe('Массив слайдов: slideNumber, text, visual'),
+  format: z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
+  style: z.string().optional().describe('Единый визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
+  language: z.enum(['ru', 'en']).default('ru').describe('Язык текста на слайдах'),
+  outputNaming: z.string().default('slide_{NN}.png').describe('Шаблон имён файлов, например slide_{NN}.png'),
+  includeTextOnImage: z.boolean().default(true).describe('Добавлять ли текст прямо на изображение'),
+});
+
 const ViralStructureSchema = z.object({
   structureId: z.enum([
     'open-loop', 'listicle', 'before-after', 'myth-busting', 'step-by-step',
@@ -247,6 +273,59 @@ const ViralStructureSchema = z.object({
 // ============================================================
 
 const TOOLS: Tool[] = [
+
+
+  {
+    name: 'aim_content_team',
+    description: `👥 Контент-команда внутри AIM: стратег + автор хуков + сценарист + визуальный директор + редактор конверсии.
+Превращает бриф в готовые deliverables для Reels, карусели, поста, Stories или контент-плана.
+Используй для упаковки сырой идеи в стратегию, хуки, структуру, caption, CTA и визуальное направление.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Режим работы контент-команды' },
+        topic: { type: 'string', description: 'Тема или исходный материал' },
+        sergeyContext: { type: 'string', description: 'Контекст бренда Сергея' },
+        platform: { type: 'string', enum: ['instagram', 'telegram', 'both'], description: 'Платформа публикации' },
+        goal: { type: 'string', enum: ['shares', 'saves', 'sales', 'subscribers', 'reach', 'trust'], description: 'Цель контента' },
+        format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
+      },
+      required: ['topic'],
+    },
+  },
+
+
+  {
+    name: 'aim_create_carousel_image_agent',
+    description: `🖼️ Агент для GPT-like генерации каруселей отдельными картинками.
+Превращает предоставленный материал в системный промпт и набор per-slide промптов.
+Главное правило: один слайд = один отдельный запрос = один PNG, без коллажей и объединения всех слайдов в одну картинку.
+Используй, когда нужен визуал как у генераторов картинок, но каждый слайд должен быть отдельным файлом.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        slides: {
+          type: 'array',
+          description: 'Массив слайдов: slideNumber, text, visual',
+          items: {
+            type: 'object',
+            properties: {
+              slideNumber: { type: 'number', description: 'Номер слайда' },
+              text: { type: 'string', description: 'Точный текст текущего слайда' },
+              visual: { type: 'string', description: 'Описание изображения для текущего слайда' },
+            },
+            required: ['slideNumber', 'text', 'visual'],
+          },
+        },
+        format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
+        style: { type: 'string', description: 'Единый визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
+        language: { type: 'string', enum: ['ru', 'en'], description: 'Язык текста на слайдах' },
+        outputNaming: { type: 'string', description: 'Шаблон имён файлов, например slide_{NN}.png' },
+        includeTextOnImage: { type: 'boolean', description: 'Добавлять ли текст прямо на изображение' },
+      },
+      required: ['slides'],
+    },
+  },
 
   // ── 🎨 STYLE CREATOR ──────────────────────────────────────────────────────
 
@@ -591,6 +670,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
 
+
+
+      case 'aim_content_team': {
+        const parsed = ContentTeamInputSchema.parse(args);
+        result = contentTeam(parsed);
+        break;
+      }
+
+      case 'aim_create_carousel_image_agent': {
+        const parsed = CreateCarouselImageAgentSchema.parse(args);
+        result = createCarouselImageAgent(parsed);
+        break;
+      }
+
       // ── Video Tools ──────────────────────────────────────────────────────
       case 'aim_evaluate_video': {
         const parsed = EvaluateVideoSchema.parse(args);
@@ -789,7 +882,7 @@ async function main() {
   await server.connect(transport);
   console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
   console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
-  console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style');
+  console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_content_team · aim_create_carousel_image_agent');
   console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
 }
 

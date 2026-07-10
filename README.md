@@ -5,7 +5,7 @@
   [![Privacy](https://img.shields.io/badge/Приватность-100%25_Локально-007808?logo=shield&logoColor=white)]()
   [![Themes](https://img.shields.io/badge/Дизайнов-12_Премиум-a855f7?logo=palette&logoColor=white)]()
   [![Layouts](https://img.shields.io/badge/Шаблонов-10_типов-3b82f6?logo=grid&logoColor=white)]()
-  [![Tools](https://img.shields.io/badge/Инструментов-14-ec4899?logo=hammer&logoColor=white)]()
+  [![Tools](https://img.shields.io/badge/Инструментов-16-ec4899?logo=hammer&logoColor=white)]()
 </div>
 
 ---
@@ -36,7 +36,7 @@
 > - Antigravity: `cp -r .gemini/commands/aim ~/.gemini/commands/` (или `Copy-Item -Recurse` на Windows)
 > - Cursor: `cat .claude/commands/aim-*.md > .cursor/rules/aim-instagram-suite.mdc`
 >
-> **4. Перезапусти** среду и подтверди что появились **14 инструментов** `aim_`. Перечисли их.
+> **4. Перезапусти** среду и подтверди что появились **16 инструментов** `aim_`. Перечисли их.
 
 **Готово!** После вставки промпта — ИИ клонирует, установит, подключит и проверит. Вам останется только перезапустить приложение.
 
@@ -359,7 +359,7 @@ AIM скачивает видео по ссылке (Instagram, TikTok, YouTube)
 </details>
 
 <details>
-<summary><b>🎨 Карусель-студия (4 инструмента)</b></summary>
+<summary><b>🎨 Карусель-студия (6 инструментов)</b></summary>
 
 | Инструмент | Что делает |
 |------------|-----------|
@@ -367,6 +367,8 @@ AIM скачивает видео по ссылке (Instagram, TikTok, YouTube)
 | `aim_render_premium_carousel` | Рендер готовых PNG в 12 дизайнах |
 | `aim_auto_brand_colors` | Настройка фирменных цветов с проверкой контраста |
 | `aim_create_style` | Интерактивный мастер создания кастомного стиля |
+| `aim_content_team` | Команда контент-специалистов: стратегия, хуки, структура, CTA и визуальное направление |
+| `aim_create_carousel_image_agent` | GPT-like агент: генерирует промпты для отдельных слайдов-картинок без коллажа |
 </details>
 
 <details>
