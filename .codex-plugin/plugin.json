@@ -1,0 +1,42 @@
+{
+  "name": "aim-instagram-suite",
+  "version": "3.1.0",
+  "description": "Codex plugin for AIM Instagram Suite content strategy and per-slide carousel image prompts.",
+  "author": {
+    "name": "AIM Instagram Suite",
+    "url": "https://github.com/Olexka/aim-instagram-suite"
+  },
+  "homepage": "https://github.com/Olexka/aim-instagram-suite",
+  "repository": "https://github.com/Olexka/aim-instagram-suite",
+  "license": "MIT",
+  "keywords": [
+    "instagram",
+    "carousel",
+    "content",
+    "mcp",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AIM Instagram Suite",
+    "shortDescription": "Create AIM content strategy and per-slide carousel image prompts.",
+    "longDescription": "AIM Instagram Suite adds MCP-powered content strategy and disciplined carousel image workflows to Codex. It includes content-team planning and per-slide prompts so each carousel slide can be generated separately without collages.",
+    "developerName": "AIM Instagram Suite",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "MCP"
+    ],
+    "websiteURL": "https://github.com/Olexka/aim-instagram-suite",
+    "privacyPolicyURL": "https://github.com/Olexka/aim-instagram-suite",
+    "termsOfServiceURL": "https://github.com/Olexka/aim-instagram-suite",
+    "defaultPrompt": [
+      "Create an Instagram carousel from this topic.",
+      "Build a content plan with AIM Content Team.",
+      "Generate each carousel slide as a separate prompt."
+    ],
+    "brandColor": "#A855F7"
+  }
+}

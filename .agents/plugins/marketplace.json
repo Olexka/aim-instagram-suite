@@ -1,0 +1,20 @@
+{
+  "name": "aim-instagram-suite-marketplace",
+  "interface": {
+    "displayName": "AIM Instagram Suite"
+  },
+  "plugins": [
+    {
+      "name": "aim-instagram-suite",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
