@@ -1,6 +1,6 @@
 /**
  * AIM Instagram Suite — MCP Server Entry Point v1.3.0
- * 14 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
+ * 15 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * Транспорт: stdio (совместим с `claude mcp add`)
  */
 
@@ -112,7 +112,7 @@ import { localizeCarousel } from './tools/localizeCarousel.js';
 import { listViralStructures, getViralStructure, structureToSlides } from './core/viralStructures.js';
 import { listAvailableFonts } from './core/designSystem.js';
 import { createStyle } from './tools/createStyle.js';
-import { contentTeam, ContentTeamSchema } from './tools/contentTeam.js';
+import { createCarouselImageAgent } from './tools/createCarouselImageAgent.js';
 
 // ============================================================
 // Схемы входных параметров — Video Tools
@@ -235,7 +235,16 @@ const CreateStyleSchema = z.object({
   saveToPath: z.string().optional().describe('Путь для сохранения JSON стиля'),
 });
 
-const ContentTeamInputSchema = ContentTeamSchema;
+
+const CreateCarouselImageAgentSchema = z.object({
+  material: z.string().min(10).describe('Исходный материал: текст, тезисы, сценарий, ссылка-описание или бриф'),
+  slideCount: z.number().min(1).max(20).default(7).describe('Количество отдельных слайдов/изображений'),
+  format: z.enum(['square', 'portrait']).default('portrait').describe('square=1080x1080, portrait=1080x1350'),
+  style: z.string().optional().describe('Визуальный стиль: например GPT-like, luxury, editorial, 3D, minimal, neon'),
+  language: z.enum(['ru', 'en']).default('ru').describe('Язык текста на слайдах'),
+  outputNaming: z.string().default('slide_{NN}.png').describe('Шаблон имён файлов, например slide_{NN}.png'),
+  includeTextOnImage: z.boolean().default(true).describe('Добавлять ли текст прямо на изображение'),
+});
 
 const ViralStructureSchema = z.object({
   structureId: z.enum([
@@ -251,25 +260,25 @@ const ViralStructureSchema = z.object({
 
 const TOOLS: Tool[] = [
 
-  {
-    name: 'aim_content_team',
-    description: `🧠 Команда контент-агентов Сергея для роста Instagram и VK.
-Создаёт систему промптов и быстрых кнопок для постов, каруселей, Reels и VK-адаптаций.
-Внутри: Хранитель вайба Сергея, Архитектор виральности, Анти-AI редактор, Скептик из ленты, VK-редактор алгоритмов, Продюсер роста подписчиков.
 
-Быстрые команды: /content, /reels, /carousel, /post, /vk, /audit, /hooks.
-Пример: "контент: тема — почему посты Сергея падают в охватах"`,
+  {
+    name: 'aim_create_carousel_image_agent',
+    description: `🖼️ Агент для GPT-like генерации каруселей отдельными картинками.
+Превращает предоставленный материал в системный промпт и набор per-slide промптов.
+Главное правило: один слайд = один отдельный запрос = один PNG, без коллажей и объединения всех слайдов в одну картинку.
+Используй, когда нужен визуал как у генераторов картинок, но каждый слайд должен быть отдельным файлом.`,
     inputSchema: {
       type: 'object',
       properties: {
-        mode: { type: 'string', enum: ['setup', 'post', 'carousel', 'reels', 'vk', 'audit', 'content'], description: 'setup=команда и кнопки; content=полный цикл' },
-        topic: { type: 'string', description: 'Тема, идея или исходный тезис' },
-        sergeyContext: { type: 'string', description: 'Вайб Сергея, ЦА, миссия, запреты, словарь' },
-        platform: { type: 'string', enum: ['instagram', 'vk', 'both'], description: 'Платформа' },
-        goal: { type: 'string', enum: ['subscribers', 'reach', 'saves', 'shares', 'trust', 'sales'], description: 'Главная цель' },
-        format: { type: 'string', enum: ['post', 'carousel', 'reels', 'vk_post', 'all'], description: 'Формат выдачи' },
+        material: { type: 'string', description: 'Исходный материал: текст, тезисы, сценарий или бриф' },
+        slideCount: { type: 'number', description: 'Количество отдельных слайдов/изображений (1-20)' },
+        format: { type: 'string', enum: ['square', 'portrait'], description: 'square=1080x1080, portrait=1080x1350' },
+        style: { type: 'string', description: 'Визуальный стиль: GPT-like, luxury, editorial, 3D, minimal, neon...' },
+        language: { type: 'string', enum: ['ru', 'en'], description: 'Язык текста на слайдах' },
+        outputNaming: { type: 'string', description: 'Шаблон имён файлов, например slide_{NN}.png' },
+        includeTextOnImage: { type: 'boolean', description: 'Добавлять ли текст прямо на изображение' },
       },
-      required: [],
+      required: ['material'],
     },
   },
 
@@ -616,9 +625,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
 
-      case 'aim_content_team': {
-        const parsed = ContentTeamInputSchema.parse(args ?? {});
-        result = contentTeam(parsed);
+
+      case 'aim_create_carousel_image_agent': {
+        const parsed = CreateCarouselImageAgentSchema.parse(args);
+        result = createCarouselImageAgent(parsed);
         break;
       }
 
@@ -821,7 +831,7 @@ async function main() {
   console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
   console.error('[AIM] 🧠 Content:   aim_content_team');
   console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
-  console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style');
+  console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_create_carousel_image_agent');
   console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
 }
 
