@@ -60,7 +60,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 >   "args": ["АБСОЛЮТНЫЙ_ПУТЬ/aim-instagram-suite/dist/index.js"]
 > }
 > ```
-> Подставь реальный абсолютный путь к папке. Полностью перезапусти Claude Desktop (закрой через трей). Подтверди что сервер подключён — должны появиться 15 инструментов `aim_`.
+> Подставь реальный абсолютный путь к папке. Полностью перезапусти Claude Desktop (закрой через трей). Подтверди что сервер подключён — должны появиться 16 инструментов `aim_`.
 
 ### 2. Конфиг вручную
 
@@ -93,7 +93,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 
 Вставь в чат Cursor:
 
-> Склонируй `https://github.com/fsbtactic-code/aim-instagram-suite.git` на рабочий стол. Выполни `node scripts/setup.js` внутри папки. Открой настройки Cursor → MCP → добавь сервер: name=`aim-instagram-suite`, command=`node`, args=`АБСОЛЮТНЫЙ_ПУТЬ/dist/index.js`. Перезапусти Cursor и подтверди подключение 15 инструментов.
+> Склонируй `https://github.com/fsbtactic-code/aim-instagram-suite.git` на рабочий стол. Выполни `node scripts/setup.js` внутри папки. Открой настройки Cursor → MCP → добавь сервер: name=`aim-instagram-suite`, command=`node`, args=`АБСОЛЮТНЫЙ_ПУТЬ/dist/index.js`. Перезапусти Cursor и подтверди подключение 16 инструментов.
 
 ### Вручную через `cursor_mcp.json`
 
@@ -228,8 +228,8 @@ Get-Content .claude\commands\aim-*.md | Set-Content .github\copilot-instructions
 Перечисли все доступные aim_ инструменты
 ```
 
-Должно появиться 15 инструментов:
-`aim_evaluate_video` · `aim_analyze_viral_reels` · `aim_generate_script` · `aim_analyze_hook` · `aim_extract_pacing` · `aim_score_virality` · `aim_score_carousel_virality` · `aim_analyze_carousel` · `aim_localize_carousel` · `aim_viral_structure` · `aim_draft_carousel_structure` · `aim_render_premium_carousel` · `aim_auto_brand_colors` · `aim_create_style` · `aim_create_carousel_image_agent`
+Должно появиться 16 инструментов:
+`aim_evaluate_video` · `aim_analyze_viral_reels` · `aim_generate_script` · `aim_analyze_hook` · `aim_extract_pacing` · `aim_score_virality` · `aim_score_carousel_virality` · `aim_analyze_carousel` · `aim_localize_carousel` · `aim_viral_structure` · `aim_draft_carousel_structure` · `aim_render_premium_carousel` · `aim_auto_brand_colors` · `aim_create_style` · `aim_content_team` · `aim_create_carousel_image_agent`
 
 ---
 

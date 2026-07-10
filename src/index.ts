@@ -1,5 +1,6 @@
 /**
  * AIM Instagram Suite — MCP Server Entry Point v1.3.0
+ * 16 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * 15 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * Транспорт: stdio (совместим с `claude mcp add`)
  */
@@ -113,6 +114,7 @@ import { listViralStructures, getViralStructure, structureToSlides } from './cor
 import { listAvailableFonts } from './core/designSystem.js';
 import { createStyle } from './tools/createStyle.js';
 import { createCarouselImageAgent } from './tools/createCarouselImageAgent.js';
+import { contentTeam } from './tools/contentTeam.js';
 
 // ============================================================
 // Схемы входных параметров — Video Tools
@@ -236,6 +238,17 @@ const CreateStyleSchema = z.object({
 });
 
 
+
+const ContentTeamInputSchema = z.object({
+  brief: z.string().min(10).describe('Бриф: тема, продукт, аудитория, оффер или исходный материал'),
+  format: z.enum(['carousel', 'reels', 'post', 'stories', 'content_plan']).default('carousel').describe('Формат результата'),
+  goal: z.enum(['reach', 'engagement', 'sales', 'subscribers', 'trust']).default('engagement').describe('Цель контента'),
+  audience: z.string().optional().describe('Целевая аудитория'),
+  toneOfVoice: z.enum(['educational', 'motivational', 'professional', 'casual', 'provocative']).default('educational').describe('Тон коммуникации'),
+  language: z.enum(['ru', 'en']).default('ru').describe('Язык результата'),
+  deliverables: z.array(z.enum(['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'])).optional().describe('Какие блоки подготовить'),
+});
+
 const CreateCarouselImageAgentSchema = z.object({
   material: z.string().min(10).describe('Исходный материал: текст, тезисы, сценарий, ссылка-описание или бриф'),
   slideCount: z.number().min(1).max(20).default(7).describe('Количество отдельных слайдов/изображений'),
@@ -259,6 +272,31 @@ const ViralStructureSchema = z.object({
 // ============================================================
 
 const TOOLS: Tool[] = [
+
+
+  {
+    name: 'aim_content_team',
+    description: `👥 Контент-команда внутри AIM: стратег + автор хуков + сценарист + визуальный директор + редактор конверсии.
+Превращает бриф в готовые deliverables для Reels, карусели, поста, Stories или контент-плана.
+Используй для упаковки сырой идеи в стратегию, хуки, структуру, caption, CTA и визуальное направление.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        brief: { type: 'string', description: 'Бриф: тема, продукт, аудитория, оффер или исходный материал' },
+        format: { type: 'string', enum: ['carousel', 'reels', 'post', 'stories', 'content_plan'], description: 'Формат результата' },
+        goal: { type: 'string', enum: ['reach', 'engagement', 'sales', 'subscribers', 'trust'], description: 'Цель контента' },
+        audience: { type: 'string', description: 'Целевая аудитория' },
+        toneOfVoice: { type: 'string', enum: ['educational', 'motivational', 'professional', 'casual', 'provocative'], description: 'Тон коммуникации' },
+        language: { type: 'string', enum: ['ru', 'en'], description: 'Язык результата' },
+        deliverables: {
+          type: 'array',
+          items: { type: 'string', enum: ['strategy', 'hooks', 'script', 'carousel_structure', 'caption', 'cta', 'visual_direction'] },
+          description: 'Какие блоки подготовить',
+        },
+      },
+      required: ['brief'],
+    },
+  },
 
 
   {
@@ -626,6 +664,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
 
 
+
+      case 'aim_content_team': {
+        const parsed = ContentTeamInputSchema.parse(args);
+        result = contentTeam(parsed);
+        break;
+      }
+
       case 'aim_create_carousel_image_agent': {
         const parsed = CreateCarouselImageAgentSchema.parse(args);
         result = createCarouselImageAgent(parsed);
@@ -831,6 +876,7 @@ async function main() {
   console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
   console.error('[AIM] 🧠 Content:   aim_content_team');
   console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
+  console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_content_team · aim_create_carousel_image_agent');
   console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_create_carousel_image_agent');
   console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');
 }
