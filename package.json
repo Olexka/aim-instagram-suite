@@ -1,7 +1,7 @@
 {
   "name": "aim-instagram-suite",
-  "version": "3.1.0",
-  "description": "MCP Server for viral video analysis, hook scoring, script generation and premium carousel rendering",
+  "version": "3.2.0",
+  "description": "MCP server for social content, carousel production, video analysis, and AI video generation",
   "main": "dist/index.js",
   "scripts": {
     "setup": "node scripts/setup.js",
@@ -19,7 +19,8 @@
     "nodejs-whisper": "^0.2.2",
     "sharp": "^0.33.5",
     "socket.io-client": "^4.8.3",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "form-data": "^4.0.5"
   },
   "devDependencies": {
     "@types/handlebars": "^4.1.0",
