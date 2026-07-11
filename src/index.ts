@@ -1,6 +1,6 @@
 /**
  * AIM Instagram Suite — MCP Server Entry Point v1.3.0
- * 16 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
+ * 17 инструментов: Video Analysis + CarouselStudio + Virality Score + Carousel Intelligence + Style Creator
  * Транспорт: stdio (совместим с `claude mcp add`)
  */
 
@@ -114,6 +114,7 @@ import { listAvailableFonts } from './core/designSystem.js';
 import { createStyle } from './tools/createStyle.js';
 import { createCarouselImageAgent } from './tools/createCarouselImageAgent.js';
 import { contentTeam } from './tools/contentTeam.js';
+import { videoCreator, VideoCreatorInputSchema } from './tools/videoCreator.js';
 
 // ============================================================
 // Схемы входных параметров — Video Tools
@@ -273,6 +274,30 @@ const ViralStructureSchema = z.object({
 // ============================================================
 
 const TOOLS: Tool[] = [
+
+  {
+    name: 'aim_video_creator',
+    description: `🎥 Создание короткого видео по описанию или фотографии.
+Поддерживает подготовку промпта, text-to-video, image-to-video, проверку статуса, скачивание MP4 и удаление задачи.
+Действия: prepare, create, status, download, delete. Для платной генерации нужен OPENAI_API_KEY в окружении MCP-сервера.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        action: { type: 'string', enum: ['prepare', 'create', 'status', 'download', 'delete'], description: 'Операция с видео' },
+        prompt: { type: 'string', description: 'Финальный режиссёрский промпт' },
+        referenceImagePath: { type: 'string', description: 'Абсолютный путь к JPEG/PNG/WebP' },
+        referenceImageUrl: { type: 'string', description: 'HTTPS URL изображения-референса' },
+        model: { type: 'string', enum: ['sora-2', 'sora-2-pro'], description: 'Модель видео' },
+        seconds: { type: 'string', enum: ['4', '8', '12'], description: 'Длительность ролика' },
+        size: { type: 'string', enum: ['720x1280', '1280x720', '1024x1792', '1792x1024'], description: 'Размер видео' },
+        videoId: { type: 'string', description: 'ID задачи для status/download/delete' },
+        outputPath: { type: 'string', description: 'Абсолютный путь .mp4 для download' },
+        autoCropReference: { type: 'boolean', description: 'Автоматически привести фото к размеру видео' },
+      },
+      required: [],
+    },
+  },
+
 
 
   {
@@ -672,6 +697,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 
 
+      case 'aim_video_creator': {
+        const parsed = VideoCreatorInputSchema.parse(args);
+        result = await videoCreator(parsed);
+        break;
+      }
+
       case 'aim_content_team': {
         const parsed = ContentTeamInputSchema.parse(args);
         result = contentTeam(parsed);
@@ -882,6 +913,7 @@ async function main() {
   await server.connect(transport);
   console.error(`[AIM] 🚀 AIM Instagram Suite v3.1.0. Инструментов: ${TOOLS.length}`);
   console.error('[AIM] 🧠 Content:   aim_content_team');
+  console.error('[AIM] 🎥 Generate:  aim_video_creator');
   console.error('[AIM] 🎬 Video:     aim_evaluate_video · aim_analyze_viral_reels · aim_generate_script · aim_analyze_hook · aim_extract_pacing');
   console.error('[AIM] 🎨 Carousel:  aim_draft_carousel_structure · aim_render_premium_carousel · aim_auto_brand_colors · aim_create_style · aim_content_team · aim_create_carousel_image_agent');
   console.error('[AIM] 🔥 Intel:     aim_score_virality · aim_score_carousel_virality · aim_analyze_carousel · aim_localize_carousel · aim_viral_structure');

@@ -5,7 +5,7 @@
   [![Privacy](https://img.shields.io/badge/Приватность-100%25_Локально-007808?logo=shield&logoColor=white)]()
   [![Themes](https://img.shields.io/badge/Дизайнов-12_Премиум-a855f7?logo=palette&logoColor=white)]()
   [![Layouts](https://img.shields.io/badge/Шаблонов-10_типов-3b82f6?logo=grid&logoColor=white)]()
-  [![Tools](https://img.shields.io/badge/Инструментов-16-ec4899?logo=hammer&logoColor=white)]()
+  [![Tools](https://img.shields.io/badge/Инструментов-17-ec4899?logo=hammer&logoColor=white)]()
 </div>
 
 ---
@@ -18,7 +18,7 @@
 >
 > **1. Клонируй и установи зависимости:**
 > ```
-> git clone https://github.com/fsbtactic-code/aim-instagram-suite.git ~/Desktop/aim-instagram-suite
+> git clone https://github.com/Olexka/aim-instagram-suite.git ~/Desktop/aim-instagram-suite
 > cd ~/Desktop/aim-instagram-suite
 > node scripts/setup.js
 > ```
@@ -36,7 +36,7 @@
 > - Antigravity: `cp -r .gemini/commands/aim ~/.gemini/commands/` (или `Copy-Item -Recurse` на Windows)
 > - Cursor: `cat .claude/commands/aim-*.md > .cursor/rules/aim-instagram-suite.mdc`
 >
-> **4. Перезапусти** среду и подтверди что появились **16 инструментов** `aim_`. Перечисли их.
+> **4. Перезапусти** среду и подтверди что появились **17 инструментов** `aim_`. Перечисли их.
 
 **Готово!** После вставки промпта — ИИ клонирует, установит, подключит и проверит. Вам останется только перезапустить приложение.
 
@@ -344,7 +344,7 @@ AIM скачивает видео по ссылке (Instagram, TikTok, YouTube)
 
 ---
 
-## 📦 Полный список инструментов (14 штук)
+## 📦 Полный список инструментов (17 штук)
 
 <details>
 <summary><b>🎬 Видео-аналитика (5 инструментов)</b></summary>
@@ -356,6 +356,15 @@ AIM скачивает видео по ссылке (Instagram, TikTok, YouTube)
 | `aim_generate_script` | Генерация сценария по формуле успешного ролика |
 | `aim_analyze_hook` | Анализ хука (первые 5 сек) + 5 вариантов усиления |
 | `aim_extract_pacing` | Обнаруживает «провисания» — где зритель начнёт скучать |
+</details>
+
+<details>
+<summary><b>🎥 Генерация видео (1 инструмент)</b></summary>
+
+| Инструмент | Что делает |
+|------------|-----------|
+| `aim_video_creator` | Создаёт короткие ролики по описанию или фотографии, проверяет статус и скачивает MP4 |
+
 </details>
 
 <details>

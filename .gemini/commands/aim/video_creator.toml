@@ -1,0 +1,17 @@
+description = "🎥 Создание видео по описанию или фотографии"
+
+prompt = """
+Используй инструмент aim_video_creator.
+
+Входные данные: {{args}}
+
+Сначала подготовь режиссёрский промпт и вызови action=prepare. Если пользователь явно подтвердил платную генерацию, вызови action=create. Затем проверяй action=status по videoId и после completed скачай MP4 через action=download.
+
+Поддерживаются:
+- text-to-video
+- image-to-video через referenceImagePath или referenceImageUrl
+- вертикальные и горизонтальные форматы
+- 4, 8 или 12 секунд
+
+Не утверждай, что ролик создан, пока API не вернул completed и файл не скачан.
+"""

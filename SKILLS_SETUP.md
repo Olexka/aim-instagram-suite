@@ -1,11 +1,11 @@
 # 🤖 AIM Instagram Suite — Skills & Slash Commands Setup
 
-This guide explains how to install the 14 AIM slash commands for your AI coding assistant.
+This guide explains how to install the 17 AIM slash commands for your AI coding assistant.
 All skill files are already included in this repository — just copy them to the right place.
 
 ---
 
-## 📋 Available Commands (14 total)
+## 📋 Available Commands (17 total)
 
 | Command | Tool | Description |
 |---|---|---|
@@ -25,6 +25,7 @@ All skill files are already included in this repository — just copy them to th
 | `aim-create-style` | `aim_create_style` | 🎨 Interactive style creator wizard |
 | `aim-content-team` | `aim_content_team` | 👥 Content strategy team for hooks, scripts, CTA and visuals |
 | `aim-carousel-image-agent` | `aim_create_carousel_image_agent` | 🖼️ Generate per-slide image prompts without collage |
+| `aim-video-creator` | `aim_video_creator` | 🎥 Create short videos from text or a reference photo |
 
 ---
 
@@ -131,7 +132,7 @@ Get-Content .claude\commands\aim-*.md | Set-Content .windsurfrules
 The `.claude/commands/aim-*.md` files are plain Markdown — readable by any AI.  
 Simply paste the contents into your agent's system prompt or context window.
 
-All 14 files combined are ~4,000 tokens. Example:
+All 17 files combined are ~4,000 tokens. Example:
 
 ```bash
 # Merge all into one file for any agent

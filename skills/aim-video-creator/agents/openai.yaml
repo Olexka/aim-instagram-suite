@@ -1,0 +1,7 @@
+interface:
+  display_name: "AIM Video Creator"
+  short_description: "Create short videos from text or a photo"
+  brand_color: "#A855F7"
+  default_prompt: "Use $aim-video-creator to turn my description or reference photo into a short vertical video."
+policy:
+  allow_implicit_invocation: true

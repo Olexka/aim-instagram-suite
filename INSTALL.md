@@ -6,7 +6,7 @@
 
 **Windows PowerShell:**
 ```powershell
-git clone https://github.com/fsbtactic-code/aim-instagram-suite.git
+git clone https://github.com/Olexka/aim-instagram-suite.git
 cd aim-instagram-suite
 node scripts/setup.js
 Copy-Item ".claude\commands\aim-*.md" "$HOME\.claude\commands\" -Force
@@ -14,7 +14,7 @@ Copy-Item ".claude\commands\aim-*.md" "$HOME\.claude\commands\" -Force
 
 **macOS / Linux:**
 ```bash
-git clone https://github.com/fsbtactic-code/aim-instagram-suite.git
+git clone https://github.com/Olexka/aim-instagram-suite.git
 cd aim-instagram-suite
 node scripts/setup.js
 cp .claude/commands/aim-*.md ~/.claude/commands/
@@ -49,7 +49,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 
 Вставь этот промпт в чат Claude Desktop (до подключения MCP):
 
-> Склонируй репозиторий `https://github.com/fsbtactic-code/aim-instagram-suite.git` на рабочий стол. Перейди в папку `aim-instagram-suite` и выполни `npm install && npm run build`. Затем открой файл `claude_desktop_config.json`:
+> Склонируй репозиторий `https://github.com/Olexka/aim-instagram-suite.git` на рабочий стол. Перейди в папку `aim-instagram-suite` и выполни `npm install && npm run build`. Затем открой файл `claude_desktop_config.json`:
 > - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 > - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 >
@@ -60,7 +60,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 >   "args": ["АБСОЛЮТНЫЙ_ПУТЬ/aim-instagram-suite/dist/index.js"]
 > }
 > ```
-> Подставь реальный абсолютный путь к папке. Полностью перезапусти Claude Desktop (закрой через трей). Подтверди что сервер подключён — должны появиться 16 инструментов `aim_`.
+> Подставь реальный абсолютный путь к папке. Полностью перезапусти Claude Desktop (закрой через трей). Подтверди что сервер подключён — должны появиться 17 инструментов `aim_`.
 
 ### 2. Конфиг вручную
 
@@ -83,7 +83,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 
 ### 3. Перезапуск
 
-Полностью закрой Claude Desktop (не сверни — именно закрой через трей), подожди 3 секунды, открой снова. В панели инструментов (🔧) должны появиться 14 MCP-инструментов `aim_`.
+Полностью закрой Claude Desktop (не сверни — именно закрой через трей), подожди 3 секунды, открой снова. В панели инструментов (🔧) должны появиться 17 MCP-инструментов `aim_`.
 
 ---
 
@@ -93,7 +93,7 @@ cp .claude/commands/aim-*.md ~/.claude/commands/
 
 Вставь в чат Cursor:
 
-> Склонируй `https://github.com/fsbtactic-code/aim-instagram-suite.git` на рабочий стол. Выполни `node scripts/setup.js` внутри папки. Открой настройки Cursor → MCP → добавь сервер: name=`aim-instagram-suite`, command=`node`, args=`АБСОЛЮТНЫЙ_ПУТЬ/dist/index.js`. Перезапусти Cursor и подтверди подключение 16 инструментов.
+> Склонируй `https://github.com/Olexka/aim-instagram-suite.git` на рабочий стол. Выполни `node scripts/setup.js` внутри папки. Открой настройки Cursor → MCP → добавь сервер: name=`aim-instagram-suite`, command=`node`, args=`АБСОЛЮТНЫЙ_ПУТЬ/dist/index.js`. Перезапусти Cursor и подтверди подключение 17 инструментов.
 
 ### Вручную через `cursor_mcp.json`
 
@@ -130,7 +130,7 @@ Get-Content .claude\commands\aim-*.md | Set-Content .cursor\rules\aim-instagram-
 
 Вставь в чат Antigravity:
 
-> Склонируй `https://github.com/fsbtactic-code/aim-instagram-suite.git` на рабочий стол. Выполни `npm install` внутри папки. Открой файл `~/.gemini/antigravity/mcp_config.json` и добавь:
+> Склонируй `https://github.com/Olexka/aim-instagram-suite.git` на рабочий стол. Выполни `npm install` внутри папки. Открой файл `~/.gemini/antigravity/mcp_config.json` и добавь:
 > ```json
 > "aim-instagram-suite": {
 >   "command": "node",
@@ -161,7 +161,7 @@ cp -r .gemini/commands/aim ~/.gemini/commands/
 ## 🟢 Claude Code CLI
 
 ```bash
-git clone https://github.com/fsbtactic-code/aim-instagram-suite.git
+git clone https://github.com/Olexka/aim-instagram-suite.git
 cd aim-instagram-suite
 npm install
 claude mcp add aim-instagram-suite -- node "$(pwd)/dist/index.js"
@@ -169,7 +169,7 @@ claude mcp add aim-instagram-suite -- node "$(pwd)/dist/index.js"
 
 **Windows PowerShell:**
 ```powershell
-git clone https://github.com/fsbtactic-code/aim-instagram-suite.git
+git clone https://github.com/Olexka/aim-instagram-suite.git
 cd aim-instagram-suite
 npm install
 claude mcp add aim-instagram-suite -- node "$PWD\dist\index.js"
@@ -228,8 +228,8 @@ Get-Content .claude\commands\aim-*.md | Set-Content .github\copilot-instructions
 Перечисли все доступные aim_ инструменты
 ```
 
-Должно появиться 16 инструментов:
-`aim_evaluate_video` · `aim_analyze_viral_reels` · `aim_generate_script` · `aim_analyze_hook` · `aim_extract_pacing` · `aim_score_virality` · `aim_score_carousel_virality` · `aim_analyze_carousel` · `aim_localize_carousel` · `aim_viral_structure` · `aim_draft_carousel_structure` · `aim_render_premium_carousel` · `aim_auto_brand_colors` · `aim_create_style` · `aim_content_team` · `aim_create_carousel_image_agent`
+Должно появиться 17 инструментов:
+`aim_video_creator` · `aim_evaluate_video` · `aim_analyze_viral_reels` · `aim_generate_script` · `aim_analyze_hook` · `aim_extract_pacing` · `aim_score_virality` · `aim_score_carousel_virality` · `aim_analyze_carousel` · `aim_localize_carousel` · `aim_viral_structure` · `aim_draft_carousel_structure` · `aim_render_premium_carousel` · `aim_auto_brand_colors` · `aim_create_style` · `aim_content_team` · `aim_create_carousel_image_agent`
 
 ---
 
@@ -243,3 +243,17 @@ Get-Content .claude\commands\aim-*.md | Set-Content .github\copilot-instructions
 | Cursor | Контекст агента | `.cursor/rules/` |
 | Windsurf | Контекст агента | `.windsurfrules` |
 | Copilot | Контекст агента | `.github/copilot-instructions.md` |
+
+
+## AIM Video Creator
+
+Для платной генерации видео добавьте `OPENAI_API_KEY` в окружение MCP-сервера. Не записывайте ключ в GitHub или тексты запросов.
+
+Пример запуска:
+
+```
+@aim-video-creator оживи эту фотографию: вертикальный ролик 8 секунд, медленное приближение камеры, естественное движение волос и света
+```
+
+Инструмент создаёт задачу асинхронно: `prepare` → `create` → `status` → `download`.
+OpenAI Videos API/Sora 2 запланирован к отключению 24 сентября 2026 года; архитектура скилла сохраняет промпты отдельно, чтобы позже заменить видеопровайдера.
