@@ -1,0 +1,7 @@
+interface:
+  display_name: "AIM Expert Conversion Content"
+  short_description: "Position expertise and lead naturally to a paid next step"
+  brand_color: "#A855F7"
+  default_prompt: "Use $aim-expert-conversion-content to develop the concept first and write the full content only after I approve it."
+policy:
+  allow_implicit_invocation: true
