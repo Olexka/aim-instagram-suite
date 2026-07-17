@@ -1,11 +1,22 @@
 ---
 name: aim-content-team
-description: Turn a topic and Sergey brand context into AIM content strategy, hooks, carousel structure, exact slide text, CTA, and visual direction.
+description: Turn a topic and an explicitly named account context into AIM content strategy, hooks, carousel structure, exact slide text, CTA, and visual direction. For expert-positioning, sales, diagnostic, consultation, support, training, or service content, load aim-expert-conversion-content first and follow its approval workflow.
 ---
 
 # AIM Content Team
 
-Use this skill when the user wants AIM to prepare content strategy or carousel planning for Sergey/AIM content.
+Use this skill when the user wants AIM to prepare content strategy or carousel planning for Olga, Sergey, or another explicitly named AIM account.
+
+## Required expert-content gate
+
+If the material promotes an expert, diagnosis, consultation, support, training, or another paid service:
+
+1. Load `aim-expert-conversion-content` first.
+2. Confirm its six context points.
+3. Present the concept for approval.
+4. Call `aim_content_team` and write the full text only after approval.
+
+Never assume the account. Keep Olga's and Sergey's positioning separate.
 
 ## Real MCP schema
 
@@ -44,7 +55,7 @@ Use no extra arguments beyond the six fields listed above.
 
 ## Workflow
 
-1. Collect or infer `topic` and `sergeyContext`.
+1. Collect `topic` and confirm the account context to place in `sergeyContext` (the field name is legacy and may contain Olga's or another account's context).
 2. Choose `platform` from `instagram`, `vk`, or `both`.
 3. Choose a valid `goal`, preferably `shares` for viral carousel work.
 4. Call `aim_content_team` with the exact schema above.
